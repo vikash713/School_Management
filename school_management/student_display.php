@@ -71,6 +71,22 @@
  } else {
      echo "Invalid request method.";
  }
+ // Handle Delete Operation
+if (isset($_POST['delete_id'])) {
+    $id = intval($_POST['delete_id']);
+    $delete_query = "DELETE FROM student WHERE id = ?";
+    if ($stmt = $conn->prepare($delete_query)) {
+        $stmt->bind_param("i", $id);
+        if ($stmt->execute()) {
+            echo "Record deleted successfully!";
+        } else {
+            echo "Failed to delete record: " . $stmt->error;
+        }
+        $stmt->close();
+    } else {
+        echo "Failed to prepare statement: " . $conn->error;
+    }
+}
 
   $query="SELECT * FROM student";
   $data= mysqli_query($conn, $query);
@@ -124,9 +140,12 @@
               <td>
               <a href='studentadd_detail.php'>Add </a>
               </td>
-              <td>
-              <a href='studentdelete_detail.php'>Delete </a>
-              </td>
+            <td>
+                        <form method='post' action='student_display.php'>
+                            <input type='hidden' name='delete_id' value='" . htmlspecialchars($result['id']) . "'>
+                            <input type='submit' value='Delete' onclick='return confirm(\"Are you sure you want to delete this record?\");'>
+                        </form>
+                    </td>
 
             </tr>";
     }
