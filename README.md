@@ -1,2 +1,2 @@
-# School_Management
+# SchoolManagement
 School_Management
